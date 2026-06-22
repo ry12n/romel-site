@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROMEL — Private Command Centre</title>
+  <meta name="description" content="ROMEL is a private AI command centre. Ten agents. One access point.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080C12;
+      --surface: #0D1117;
+      --panel: #131922;
+      --accent: #3D8EF0;
+      --accent-dim: #1E4A8A;
+      --accent-faint: #0D2040;
+      --text: #F0EEE9;
+      --text-secondary: #9BA3AF;
+      --text-muted: #4B5563;
+      --border: #161D28;
+      --border-mid: #1F2937;
+      --border-bright: #2D3B4E;
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 24px;
+      --space-lg: 48px;
+      --space-xl: 96px;
+      --space-2xl: 144px;
+      --radius: 0px;
+      --font-ui: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 15px;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Layout */
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    /* Top bar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 12, 18, 0.92);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .logo span {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .topbar-cta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+      background: var(--accent-faint);
+      padding: 10px 18px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .topbar-cta:hover {
+      border-color: var(--accent);
+      background: rgba(61, 142, 240, 0.08);
+    }
+
+    /* Hero */
+    .hero {
+      padding-top: calc(64px + var(--space-2xl));
+      padding-bottom: var(--space-2xl);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-md);
+    }
+
+    .hero-title {
+      font-family: var(--font-ui);
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 300;
+      line-height: 1.08;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin: 0 0 var(--space-md) 0;
+      max-width: 880px;
+    }
+
+    .hero-sub {
+      font-family: var(--font-ui);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-lg) 0;
+      max-width: 560px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      border: 1px solid var(--accent);
+      background: var(--accent-faint);
+      padding: 16px 28px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .hero-cta:hover {
+      background: rgba(61, 142, 240, 0.12);
+      border-color: var(--accent);
+    }
+
+    .hero-cta::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+    }
+
+    /* Section base */
+    .section {
+      padding-top: var(--space-2xl);
+      padding-bottom: var(--space-2xl);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-index {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xs);
+    }
+
+    .section-title {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* Roster */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border-mid);
+    }
+
+    .agent {
+      background: var(--surface);
+      padding: var(--space-md);
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background 0.2s ease;
+    }
+
+    .agent:hover {
+      background: var(--panel);
+    }
+
+    .agent-id {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .agent-name {
+      font-family: var(--font-ui);
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin: var(--space-sm) 0 4px 0;
+    }
+
+    .agent-role {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    /* Command layer */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border-mid);
+      padding: var(--space-md);
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spec-card:hover {
+      border-color: var(--border-bright);
+    }
+
+    .spec-index {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-md);
+    }
+
+    .spec-title {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin: 0 0 var(--space-sm) 0;
+    }
+
+    .spec-body {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .spec-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: var(--space-md);
+    }
+
+    /* Access */
+    .access-panel {
+      background: var(--surface);
+      border: 1px solid var(--border-mid);
+      padding: var(--space-lg);
+      max-width: 640px;
+    }
+
+    .access-title {
+      font-family: var(--font-ui);
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .access-note {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-md) 0;
+    }
+
+    .access-form {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .access-input {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border-mid);
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .access-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .access-input:focus {
+      border-color: var(--accent);
+    }
+
+    .access-submit {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 14px 24px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .access-submit:hover {
+      background: #4F9BF2;
+      border-color: #4F9BF2;
+    }
+
+    .access-status {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      margin-top: var(--space-sm);
+      min-height: 18px;
+    }
+
+    /* Footer */
+    .footer {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-lg);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .roster-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .spec-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .roster-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .agent {
+        min-height: 140px;
+      }
+
+      .access-form {
+        flex-direction: column;
+      }
+
+      .access-submit {
+        width: 100%;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: var(--space-sm);
+        text-align: center;
+      }
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--accent-faint);
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="logo">ROMEL <span>// PRIVATE COMMAND</span></div>
+      <a href="#access" class="topbar-cta">Request access</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-label">Product Company // Established 2026</div>
+        <h1 class="hero-title">Private command centre. Ten agents. One access point.</h1>
+        <p class="hero-sub">ROMEL builds the layer above the agents — a single, persistent interface for a roster of specialists that already work.</p>
+        <a href="#access" class="hero-cta">Request access</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">01 / Roster</div>
+          <h2 class="section-title">Active personnel</h2>
+        </div>
+        <div class="roster-grid">
+          <article class="agent">
+            <div class="agent-id">AGT-001</div>
+            <div>
+              <h3 class="agent-name">Atlas</h3>
+              <div class="agent-role">Strategy / Memory</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-002</div>
+            <div>
+              <h3 class="agent-name">Grace</h3>
+              <div class="agent-role">Operations / Coordination</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-003</div>
+            <div>
+              <h3 class="agent-name">Noah</h3>
+              <div class="agent-role">Systems / Architecture</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-004</div>
+            <div>
+              <h3 class="agent-name">Tom</h3>
+              <div class="agent-role">Engineering / Build</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-005</div>
+            <div>
+              <h3 class="agent-name">Felix</h3>
+              <div class="agent-role">Quality / Verification</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-006</div>
+            <div>
+              <h3 class="agent-name">David</h3>
+              <div class="agent-role">Research / Intelligence</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-007</div>
+            <div>
+              <h3 class="agent-name">Mia</h3>
+              <div class="agent-role">Design / Interface</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-008</div>
+            <div>
+              <h3 class="agent-name">Dr. Bayle</h3>
+              <div class="agent-role">Analysis / Reasoning</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-009</div>
+            <div>
+              <h3 class="agent-name">Iris</h3>
+              <div class="agent-role">Perception / Signal</div>
+            </div>
+          </article>
+          <article class="agent">
+            <div class="agent-id">AGT-010</div>
+            <div>
+              <h3 class="agent-name">Reeve</h3>
+              <div class="agent-role">Security / Access</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">02 / Command Layer</div>
+          <h2 class="section-title">Product specification</h2>
+        </div>
+        <div class="spec-grid">
+          <article class="spec-card">
+            <div class="spec-index">SPEC-01</div>
+            <h3 class="spec-title">Single access point</h3>
+            <p class="spec-body">All ten agents reachable through one interface. No context switching, no plugin sprawl, no fractured workflows.</p>
+            <div class="spec-meta">Interface // Unified</div>
+          </article>
+          <article class="spec-card">
+            <div class="spec-index">SPEC-02</div>
+            <h3 class="spec-title">Persistent memory</h3>
+            <p class="spec-body">The command layer remembers. Projects, preferences, and prior decisions travel with you across sessions.</p>
+            <div class="spec-meta">State // Persistent</div>
+          </article>
+          <article class="spec-card">
+            <div class="spec-index">SPEC-03</div>
+            <h3 class="spec-title">Private infrastructure</h3>
+            <p class="spec-body">Built for operators who treat their work as sensitive. No public dashboards, no shared training pools, no noise.</p>
+            <div class="spec-meta">Deployment // Private</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="access">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">03 / Access</div>
+          <h2 class="section-title">Request entry</h2>
+        </div>
+        <div class="access-panel">
+          <h2 class="access-title">Request access</h2>
+          <p class="access-note">ROMEL is operating in limited release. If your work requires a private command centre, submit your address.</p>
+          <form class="access-form" id="accessForm">
+            <input type="email" name="email" class="access-input" placeholder="email@domain.com" required autocomplete="email">
+            <button type="submit" class="access-submit">Request access</button>
+          </form>
+          <div class="access-status" id="accessStatus" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© 2026 ROMEL</div>
+      <div>Private Command Centre</div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('accessForm');
+    const status = document.getElementById('accessStatus');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      status.textContent = 'Verifying...';
+      status.style.color = 'var(--text-secondary)';
+
+      setTimeout(function() {
+        form.reset();
+        status.textContent = 'Request logged. You will be contacted.';
+        status.style.color = 'var(--accent)';
+      }, 900);
+    });
+  </script>
+</body>
+</html>
