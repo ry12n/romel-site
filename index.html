@@ -378,14 +378,17 @@
     }
 
     .access-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text);
-      background: var(--accent);
       border: 1px solid var(--accent);
+      background: var(--accent-faint);
       padding: 14px 24px;
       cursor: pointer;
       transition: background 0.2s ease, border-color 0.2s ease;
@@ -393,8 +396,27 @@
     }
 
     .access-submit:hover {
-      background: #4F9BF2;
-      border-color: #4F9BF2;
+      background: rgba(61, 142, 240, 0.12);
+      border-color: var(--accent);
+    }
+
+    .access-submit::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .access-status {
@@ -478,7 +500,7 @@
   <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-label">Product Company // Established 2026</div>
+        <div class="hero-label">Command // Pre-authentication</div>
         <h1 class="hero-title">Private command centre. Ten agents. One access point.</h1>
         <p class="hero-sub">ROMEL builds the layer above the agents — a single, persistent interface for a roster of specialists that already work.</p>
         <a href="#access" class="hero-cta">Request access</a>
@@ -496,70 +518,70 @@
             <div class="agent-id">AGT-001</div>
             <div>
               <h3 class="agent-name">Atlas</h3>
-              <div class="agent-role">Strategy / Memory</div>
+              <div class="agent-role">Orchestration</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-002</div>
             <div>
               <h3 class="agent-name">Grace</h3>
-              <div class="agent-role">Operations / Coordination</div>
+              <div class="agent-role">Comms / email</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-003</div>
             <div>
               <h3 class="agent-name">Noah</h3>
-              <div class="agent-role">Systems / Architecture</div>
+              <div class="agent-role">Ideas / capture</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-004</div>
             <div>
               <h3 class="agent-name">Tom</h3>
-              <div class="agent-role">Engineering / Build</div>
+              <div class="agent-role">Engineering / build</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-005</div>
             <div>
               <h3 class="agent-name">Felix</h3>
-              <div class="agent-role">Quality / Verification</div>
+              <div class="agent-role">Review / verification</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-006</div>
             <div>
               <h3 class="agent-name">David</h3>
-              <div class="agent-role">Research / Intelligence</div>
+              <div class="agent-role">Finance / money</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-007</div>
             <div>
               <h3 class="agent-name">Mia</h3>
-              <div class="agent-role">Design / Interface</div>
+              <div class="agent-role">Design / interface</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-008</div>
             <div>
               <h3 class="agent-name">Dr. Bayle</h3>
-              <div class="agent-role">Analysis / Reasoning</div>
+              <div class="agent-role">—</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-009</div>
             <div>
               <h3 class="agent-name">Iris</h3>
-              <div class="agent-role">Perception / Signal</div>
+              <div class="agent-role">Oversight</div>
             </div>
           </article>
           <article class="agent">
             <div class="agent-id">AGT-010</div>
             <div>
               <h3 class="agent-name">Reeve</h3>
-              <div class="agent-role">Security / Access</div>
+              <div class="agent-role">Security / access</div>
             </div>
           </article>
         </div>
@@ -605,7 +627,8 @@
           <h2 class="access-title">Request access</h2>
           <p class="access-note">ROMEL is operating in limited release. If your work requires a private command centre, submit your address.</p>
           <form class="access-form" id="accessForm">
-            <input type="email" name="email" class="access-input" placeholder="email@domain.com" required autocomplete="email">
+            <label for="email" class="visually-hidden">Email address</label>
+            <input type="email" id="email" name="email" class="access-input" placeholder="email@domain.com" required autocomplete="email">
             <button type="submit" class="access-submit">Request access</button>
           </form>
           <div class="access-status" id="accessStatus" aria-live="polite"></div>
